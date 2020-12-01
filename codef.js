@@ -47,11 +47,7 @@ function readConfigureFile() {
     }
     return ini.parse(fs.readFileSync(getConfigureFilePath(), 'utf-8'));
 }
-/*#5.요청
- *  - 샌드박스 : EasyCodefConstant[readConfigureFile().SERVICE_TYPE]
- *  - 데모 : EasyCodefConstant.SERVICE_TYPE_DEMO
- *  - 운영 : EasyCodefConstant.SERVICE_TYPE_API
- */
+
 let access_token = "";
 codef.requestToken(EasyCodefConstant[readConfigureFile().SERVICE_TYPE])
     .then(function (response) {
@@ -88,32 +84,53 @@ module.exports = function(RED) {
                 const param = {
                     accountList: accountList,
                 };
-                /*	#6.요청
-                 *  [서비스 타입 설정]
-                 *      - 샌드박스 : EasyCodefConstant[readConfigureFile().SERVICE_TYPE]
-                 *      - 데모 : EasyCodefConstant.SERVICE_TYPE_DEMO
-                 *      - 운영 : EasyCodefConstant.SERVICE_TYPE_API
-                 */
-                codef.createAccount(EasyCodefConstant[readConfigureFile().SERVICE_TYPE], param)
+                codef[action](EasyCodefConstant[readConfigureFile().SERVICE_TYPE], param)
                     .then(function (response) {
-                        /*
-                         *  #7. 응답 결과
-                         */
                         msg.payload = response;
                         self.send(msg);
                     });
-            }else if(action === ''){ // '/v1/kr/card/p/account/card-list'
-                /* #5.요청 파라미터 설정 - 각 상품별 파라미터를 설정(https://developer.codef.io/products) */
-                // let param = {
-                //     connectedId: '9GNB80TmkzNaX-E7zG....',
-                //     organization: '0309',
-                //     birthDate : '',
-                //     inquiryType: '0'
-                // };
-                /* #6.코드에프 정보 조회 요청 - 서비스타입(API:정식, DEMO:데모, SANDBOX:샌드박스) */
-                codef.requestProduct(action, EasyCodefConstant[readConfigureFile().SERVICE_TYPE], param)
+            }else if(action === 'addAccount'){
+                for(var i in accountList){
+                    if(accountList[i].password){
+                        accountList[i].password = EasyCodefUtil.encryptRSA(readConfigureFile().PUBLIC_KEY, accountList[i].password);
+                    }
+                }
+                const param = {
+                    connectedId : param.connectedId,
+                    accountList: accountList,
+                };
+                codef[action](EasyCodefConstant[readConfigureFile().SERVICE_TYPE], param)
                     .then(function (response) {
-                        // #7. 응답 결과
+                        msg.payload = response;
+                        self.send(msg);
+                    });
+            }else if(action === 'updateAccount'){
+                for(var i in accountList){
+                    if(accountList[i].password){
+                        accountList[i].password = EasyCodefUtil.encryptRSA(readConfigureFile().PUBLIC_KEY, accountList[i].password);
+                    }
+                }
+                const param = {
+                    connectedId : param.connectedId,
+                    accountList: accountList,
+                };
+                codef[action](EasyCodefConstant[readConfigureFile().SERVICE_TYPE], param)
+                    .then(function (response) {
+                        msg.payload = response;
+                        self.send(msg);
+                    });
+            }else if(action === 'deleteAccount'){
+                for(var i in accountList){
+                    if(accountList[i].password){
+                        accountList[i].password = EasyCodefUtil.encryptRSA(readConfigureFile().PUBLIC_KEY, accountList[i].password);
+                    }
+                }
+                const param = {
+                    connectedId : param.connectedId,
+                    accountList: accountList,
+                };
+                codef[action](EasyCodefConstant[readConfigureFile().SERVICE_TYPE], param)
+                    .then(function (response) {
                         msg.payload = response;
                         self.send(msg);
                     });

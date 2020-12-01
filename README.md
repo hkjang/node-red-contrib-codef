@@ -14,6 +14,19 @@ Run the following command in the root directory of your Node-RED install:
 
 ## How to use
 
+  #### 서비스 타입 설정 및 키 설정 - ~/.codef/configure
+      - 샌드박스 : SERVICE_TYPE=SERVICE_TYPE_SANDBOX
+      - 데모 : SERVICE_TYPE=SERVICE_TYPE_DEMO
+      - 운영 : SERVICE_TYPE=SERVICE_TYPE_API
+      
+ #### 요청 파라미터 설정
+   - 계정관리 파라미터를 설정(https://developer.codef.io/cert/account/cid-overview)
+   
+
+ #### 응답 결과 확인
+ 
+ ------------
+ 
 ###  To use node-red-contrib-codef, you must first create an authentication key.
 
 ### Save the generated authentication key information.
@@ -23,13 +36,19 @@ Run the following command in the root directory of your Node-RED install:
 - ~/.codef/configure example
 
 ```
+#- 샌드박스 : EasyCodefConstant.SERVICE_TYPE
+#- 데모 : EasyCodefConstant.SERVICE_TYPE_DEMO
+#- 운영 : EasyCodefConstant.SERVICE_TYPE_API
+
 DEMO_CLIENT_ID=
 DEMO_CLIENT_SECRET=
 CLIENT_ID=
 CLIENT_SECRET=
 PUBLIC_KEY=
-SERVICE_TYPE=SERVICE_TYPE_SANDBOX
+SERVICE_TYPE=SERVICE_TYPE_SANDBOX or SERVICE_TYPE_API or SERVICE_TYPE_DEMO
+
 ```
+
 
 Usage
 -----
@@ -38,12 +57,21 @@ Usage
 
 <i><a href="https://www.npmjs.com/package/easycodef-node" target="_new">codef</a></i> api request node.
 
-### action 
+### action parameter
 - need action
     - createAccount 
-    - /v1/kr/card/p/account/card-list
-    - ...
+    - addAccount 
+    - updateAccount 
+    - deleteAccount 
+    - /v1/kr/card/p/account/card-list : 카드 보유 리스트
+    - /v1/kr/bank/b/account/account-list : 은행 보유 계좌 리스트
+    - refer to other api on https://developer.codef.io/products
 
+### param parameter
+- need param
+
+### accountList parameter
+- need accountList if action is createAccount, addAccount, updateAccount, deleteAccount
 
 ## request parameter sample 
 ```javascript
