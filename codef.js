@@ -48,24 +48,19 @@ function readConfigureFile() {
     return ini.parse(fs.readFileSync(getConfigureFilePath(), 'utf-8'));
 }
 /*#5.요청
- *  - 샌드박스 : EasyCodefConstant.SERVICE_TYPE_SANDBOX
+ *  - 샌드박스 : EasyCodefConstant[readConfigureFile().SERVICE_TYPE]
  *  - 데모 : EasyCodefConstant.SERVICE_TYPE_DEMO
  *  - 운영 : EasyCodefConstant.SERVICE_TYPE_API
  */
-
 let access_token = "";
-codef.requestToken(EasyCodefConstant.SERVICE_TYPE_SANDBOX)
+codef.requestToken(EasyCodefConstant[readConfigureFile().SERVICE_TYPE])
     .then(function (response) {
         /*
          * #6. 토큰 발급 결과
          */
-        console.log('----------access_token----------');
-        console.log(response);
-        console.log('----------access_token----------');
         access_token = response;
 
     });
-
 module.exports = function(RED) {
     "use strict";
     function codefOut(n) {
@@ -73,73 +68,41 @@ module.exports = function(RED) {
         var self = this;
         this.action = n.action || "";
         this.param = n.param || "";
+        this.accountList = n.accountList || "";
         this.on('input', function (msg) {
             const action = self.action || msg.action;
             const param = self.param || msg.param;
-            self.log('------access_token------');
-            self.log(access_token);
+            const accountList = self.accountList || msg.accountList;
             self.error(action);
             self.error(param);
             /*
             * #5.요청 파라미터 설정
             * - 계정관리 파라미터를 설정(https://developer.codef.io/cert/account/cid-overview)
             */
-            if(this.action === 'createAccount'){
-                const accountList = []; // 계정 등록 리스트
-                //+[인증서]
-                // const accountCert = {
-                //     countryCode: 'KR',
-                //     businessType: 'BK',
-                //     clientType: 'P',
-                //     organization: '0004',
-                //     loginType: '0',
-                //     certType: '1',
-                //     keyFile: EasyCodefUtil.encodeToFileString(
-                //         path.join(__dirname, 'signPri.key')
-                //     ),
-                //     derFile: EasyCodefUtil.encodeToFileString(
-                //         path.join(__dirname, 'signCert.der')
-                //     ),
-                //     password: EasyCodefUtil.encryptRSA(readConfigureFile().PUBLIC_KEY, 'user_password')
-                // };
-                // accountList.push(accountCert);
-
-                //+ [아이디]
-                const accountIDPWD = {
-                    countryCode: 'KR',
-                    businessType: 'BK',
-                    clientType: 'P',
-                    organization: '0081',
-                    loginType: '1',
-                    id: 'user_id',
-                    password: EasyCodefUtil.encryptRSA(readConfigureFile().PUBLIC_KEY, 'user_password')
-                };
-                accountList.push(accountIDPWD);
-
+            if(action === 'createAccount'){
+                for(var i in accountList){
+                    if(accountList[i].password){
+                        accountList[i].password = EasyCodefUtil.encryptRSA(readConfigureFile().PUBLIC_KEY, accountList[i].password);
+                    }
+                }
                 const param = {
                     accountList: accountList,
                 };
-
                 /*	#6.요청
                  *  [서비스 타입 설정]
-                 *      - 샌드박스 : EasyCodefConstant.SERVICE_TYPE_SANDBOX
+                 *      - 샌드박스 : EasyCodefConstant[readConfigureFile().SERVICE_TYPE]
                  *      - 데모 : EasyCodefConstant.SERVICE_TYPE_DEMO
                  *      - 운영 : EasyCodefConstant.SERVICE_TYPE_API
                  */
-                codef
-                    .createAccount(EasyCodefConstant.SERVICE_TYPE_SANDBOX, param)
+                codef.createAccount(EasyCodefConstant[readConfigureFile().SERVICE_TYPE], param)
                     .then(function (response) {
                         /*
                          *  #7. 응답 결과
                          */
-                        console.log(response);
-                        self.log('------createAccount------');
-                        self.log(response);
                         msg.payload = response;
                         self.send(msg);
                     });
-
-            }else if(this.action === ''){ // '/v1/kr/card/p/account/card-list'
+            }else if(action === ''){ // '/v1/kr/card/p/account/card-list'
                 /* #5.요청 파라미터 설정 - 각 상품별 파라미터를 설정(https://developer.codef.io/products) */
                 // let param = {
                 //     connectedId: '9GNB80TmkzNaX-E7zG....',
@@ -148,31 +111,20 @@ module.exports = function(RED) {
                 //     inquiryType: '0'
                 // };
                 /* #6.코드에프 정보 조회 요청 - 서비스타입(API:정식, DEMO:데모, SANDBOX:샌드박스) */
-                const productUrl = this.action; // (예시)개인 보유카드 조회 URL
-                codef
-                    .requestProduct(productUrl, EasyCodefConstant.SERVICE_TYPE_SANDBOX, param)
+                codef.requestProduct(action, EasyCodefConstant[readConfigureFile().SERVICE_TYPE], param)
                     .then(function (response) {
                         // #7. 응답 결과
-                        console.log(response);
-                        self.log('------createAccount------');
-                        self.log(response);
                         msg.payload = response;
                         self.send(msg);
                     });
             }else{
-                const productUrl = this.action; // (예시)개인 보유카드 조회 URL
-                codef
-                    .requestProduct(productUrl, EasyCodefConstant.SERVICE_TYPE_SANDBOX, param)
+                codef.requestProduct(action, EasyCodefConstant[readConfigureFile().SERVICE_TYPE], param)
                     .then(function (response) {
                         // #7. 응답 결과
-                        console.log(response);
-                        self.log('------createAccount------');
-                        self.log(response);
                         msg.payload = response;
                         self.send(msg);
                     });
             }
-
         });
     }
     RED.nodes.registerType("codef", codefOut);

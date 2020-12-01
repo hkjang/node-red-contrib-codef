@@ -1,0 +1,40 @@
+{
+  "result": {
+    "code": "CF-00000",
+    "extraMessage": "",
+    "message": "성공",
+    "transactionId": "5069429e367745baba92f5c12c4343de"
+  },
+  "data": [
+    {
+      "resCardType": "체크/본인",
+      "resValidPeriod": "",
+      "resCardName": "OO체크카드-국제ATM",
+      "resTrafficYN": "불가능",
+      "resIssueDate": "",
+      "resUserNm": "***",
+      "resSleepYN": "",
+      "resCardNo": "6056********0000"
+    },
+    {
+      "resCardType": "신용/본인",
+      "resValidPeriod": "",
+      "resCardName": "할인카드",
+      "resTrafficYN": "불가능",
+      "resIssueDate": "",
+      "resUserNm": "***",
+      "resSleepYN": "",
+      "resCardNo": "6253********0000"
+    },
+    {
+      "resCardType": "체크/본인",
+      "resValidPeriod": "",
+      "resCardName": "OO체크카드",
+      "resTrafficYN": "불가능",
+      "resIssueDate": "",
+      "resUserNm": "***",
+      "resSleepYN": "",
+      "resCardNo": "4214********0000"
+    }
+  ]
+}
