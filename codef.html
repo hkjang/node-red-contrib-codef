@@ -4,6 +4,10 @@
         <label for="node-input-action"><i class="fa"></i> action </label>
         <input type="text" id="node-input-action" placeholder="action">
     </div>
+    <div class="form-row">
+        <label for="node-input-creds"> <i class="fa fa-key fa-fw"></i> Keys</span></label>
+        <input type="text" id="node-input-creds">
+    </div>
 </script>
 
 <script type="text/x-red" data-help-name="codef">
@@ -16,7 +20,11 @@
     RED.nodes.registerType('codef',{
         category: 'function',
         defaults: {
-            action: {value:"", required:false}
+            action: {value:"", required:false},
+            creds: {
+                value: "",
+                type: "codefkey"
+            },
         },
         color:"#ffffff",
         icon: "codef.png",
@@ -32,3 +40,47 @@
     });
 
 </script>
+
+
+<script type="text/x-red" data-template-name="codefkey">
+    <div class="form-row">
+        <label for="node-input-name"> <i class="fa fa-tag fa-fw"></i> Name</label>
+        <input type="text" id="node-config-input-name" placeholder="Name">
+    </div>
+
+    <div class="form-row">
+      <label for="node-config-input-clinetId"> client id</label>
+      <input type="text" id="node-config-input-clinetId" placeholder="CLIENT_ID">
+    </div>
+        <div class="form-row">
+      <label for="node-config-input-clientSecret"> client secret</label>
+      <input type="text" id="node-config-input-clientSecret" placeholder="CLIENT_SECRET">
+    </div>
+        <div class="form-row">
+      <label for="node-config-input-publicKey"> public key</label>
+      <input type="text" id="node-config-input-publicKey" placeholder="PUBLIC_KEY">
+    </div>
+        <div class="form-row">
+      <label for="node-config-input-serviceType"> service type</label>
+      <input type="text" id="node-config-input-serviceType" placeholder="SERVICE_TYPE">
+    </div>
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('codefkey', {
+        category: 'config',
+        defaults: {
+            name: {value:""}
+        },
+        credentials: {
+            clientId: {},
+            clientSecret: {},
+            publicKey: {},
+            serviceType: {},
+        },
+        label: function () {
+            return this.name || 'Keys';
+        }
+    });
+</script>
+

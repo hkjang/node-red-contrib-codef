@@ -14,7 +14,7 @@ Run the following command in the root directory of your Node-RED install:
 
 ## How to use
 
-  #### 서비스 타입 설정 및 키 설정 - ~/.codef/configure
+  #### 서비스 타입 설정 및 키 설정 - codef node에 설정
       - 샌드박스 : SERVICE_TYPE=SERVICE_TYPE_SANDBOX
       - 데모 : SERVICE_TYPE=SERVICE_TYPE_DEMO
       - 운영 : SERVICE_TYPE=SERVICE_TYPE_API
@@ -29,19 +29,13 @@ Run the following command in the root directory of your Node-RED install:
  
 ###  To use node-red-contrib-codef, you must first create an authentication key.
 
-### Save the generated authentication key information.
-
-- Save the authentication key information to ~/.codef/configure for Mac/Linux and C:\Users\USERNAME\\.codef\configure for Windows.
-
-- ~/.codef/configure example
+### Save the generated authentication key information to codef node config.
 
 ```
 #- 샌드박스 : EasyCodefConstant.SERVICE_TYPE
 #- 데모 : EasyCodefConstant.SERVICE_TYPE_DEMO
 #- 운영 : EasyCodefConstant.SERVICE_TYPE_API
 
-DEMO_CLIENT_ID=
-DEMO_CLIENT_SECRET=
 CLIENT_ID=
 CLIENT_SECRET=
 PUBLIC_KEY=
